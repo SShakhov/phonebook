@@ -1,9 +1,13 @@
 package phonebook;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class Book
 {
@@ -89,16 +93,42 @@ public class Book
 	public String toString()
 	{
 		String str = "";
-		Iterator<Map.Entry<Integer, ArrayList<BookEntry>>> mapIter = list.entrySet().iterator();
+		
+		ArrayList<BookEntry> sorted = new ArrayList<BookEntry>();
+		Iterator<Entry<Integer, ArrayList<BookEntry>>> mapIter = list.entrySet().iterator();
 
 		while(mapIter.hasNext())
 		{
 			Iterator <BookEntry> listIter = mapIter.next().getValue().iterator();
 			while(listIter.hasNext())
 			{
-				str += listIter.next().toString();
-				str += "\n";
+				sorted.add(listIter.next());
 			}
+		}
+		
+		Collections.sort(sorted, new Comparator<BookEntry>()
+				{
+					@Override
+					public int compare(BookEntry o1, BookEntry o2)
+					{
+						int lastNames = 
+								o1.getName().getLastName().toLowerCase().compareTo(o2.getName().getLastName().toLowerCase());
+						int firstNames = 
+								o1.getName().getFirstName().toLowerCase().compareTo(o2.getName().getFirstName().toLowerCase());
+						
+						if(lastNames != 0)
+							return lastNames;
+						else
+							return firstNames;
+					}
+				});
+		
+		Iterator<BookEntry> sortIter = sorted.iterator();
+		
+		while(sortIter.hasNext())
+		{
+			str += sortIter.next();
+			str += "\n";
 		}
 		
 		return str.trim();
