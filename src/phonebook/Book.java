@@ -12,9 +12,10 @@ public class Book implements Serializable
 {
 	private static final long serialVersionUID = -4336066641849188538L;	
 	
-	private HashMap<Integer, ArrayList<BookEntry>> list = 
-			new HashMap<Integer, ArrayList<BookEntry>>();
 	private Integer maxEntries = 42;
+	
+	private HashMap<Integer, ArrayList<BookEntry>> list = 
+			new HashMap<Integer, ArrayList<BookEntry>>(maxEntries);
 	
 	private Integer getHash(String s)
 	{
