@@ -2,12 +2,11 @@ package phonebook;
 
 //import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Book
 {
-	private HashMap<Integer, Map.Entry<String, String>> list = 
-			new HashMap<Integer, Map.Entry<String, String>>();
+	private HashMap<Integer, BookEntry> list = 
+			new HashMap<Integer, BookEntry>();
 	
 	private Integer getHash(String s)
 	{
@@ -16,8 +15,8 @@ public class Book
 	
 	public void newEntry(String name, String number)
 	{
-		
-		list.put(getHash(name), new Map.Entry<String, String>().);
+		//Add return true on success
+		list.put(getHash(name), new BookEntry(name, number));
 	}
 	
 	public void editEntry(String name, String newNumber)
@@ -28,5 +27,11 @@ public class Book
 	public void removeEntry(String name)
 	{
 		
+	}
+	
+	public BookEntry getEntry(String name)
+	{
+		//Add return null on failure
+		return list.get(getHash(name));
 	}
 }

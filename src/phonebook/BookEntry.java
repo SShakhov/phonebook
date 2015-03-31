@@ -32,4 +32,10 @@ public class BookEntry
 	{
 		return number;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return name + ":\t" + number;
+	}
 }
