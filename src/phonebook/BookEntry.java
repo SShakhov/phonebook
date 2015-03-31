@@ -45,7 +45,10 @@ public class BookEntry
 	
 	public void setNumber(String number)
 	{
-		//Add checks
+		for(Character c : number.toCharArray())
+			if(!Character.isDigit(c))
+				throw new IllegalArgumentException("Phone number contains invalid characters");
+
 		this.number = number;
 	}
 	
