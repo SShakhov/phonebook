@@ -1,5 +1,6 @@
 package phonebook;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -18,12 +19,16 @@ public class Main
 			System.out.println("1: Create new entry");
 			System.out.println("2: Update existing entry");
 			System.out.println("3: Remove entry");
-			System.out.println("4: Print phonebook");
-			System.out.println("5: Exit");	
+			System.out.println("4: Find entry");
+			System.out.println("5: Print phonebook");
+			System.out.println("6: Exit");
+			
+			int input = s.nextInt();
+			s.nextLine();
 			
 			try
 			{
-				switch (s.nextInt()) 
+				switch (input) 
 				{
 				case 1:
 					createNewEntry(book, s);
@@ -38,11 +43,14 @@ public class Main
 					break;
 					
 				case 4:
-					s.nextLine();
-					System.out.println(book);
+					System.out.println(book.getEntry(formName(book, s)));
 					break;
 					
 				case 5:
+					System.out.println(book);
+					break;
+					
+				case 6:
 					s.close();
 					return;
 					
@@ -69,20 +77,16 @@ public class Main
 				System.out.println("Please choose one of the listed options");
 				s.nextLine();
 			}
+			catch(IndexOutOfBoundsException e)
+			{
+				System.out.println("\n" + e.getMessage());
+			}
 		}
 	}
 	
 	public static void createNewEntry(Book book, Scanner s) throws EntryAlreadyExistsException
-	{
-		s.nextLine();
-		
-		System.out.print("Enter first name: ");
-		String firstName = s.nextLine();
-		
-		System.out.print("Enter last name: ");
-		String lastName = s.nextLine();
-		
-		Name name = new Name(firstName, lastName);
+	{	
+		Name name = formName(book, s);
 		
 		System.out.print("Enter a phone number: ");
 		String number = s.nextLine();
@@ -92,37 +96,63 @@ public class Main
 	
 	public static void updateEntry(Book book, Scanner s) throws EntryNotFoundException
 	{
+		Name name = formName(book, s);
+		
+		BookEntry be = book.getEntry(name);
+		System.out.println(be);
+		
+		System.out.println("1: Add new number");
+		System.out.println("2: Delete Existing number");
+		System.out.println("3: Return to main menu");
+		
+		int input = s.nextInt();
 		s.nextLine();
 		
-		System.out.print("Enter first name of a person to update: ");
-		String firstName = s.nextLine();
-		
-		System.out.print("Enter last name of a person to update: ");
-		String lastName = s.nextLine();
-		
-		Name name = new Name(firstName, lastName);
-		
-		System.out.println(book.getEntry(name));
-		System.out.print("Enter new phone number: ");
-		String newNumber = s.nextLine();
+		switch (input)
+		{
+		case 1:
+			System.out.print("Enter new number: ");
+			book.editEntry(name, s.nextLine(), -1);
+			break;
 			
-		book.editEntry(name, newNumber);
+		case 2:
+			ArrayList<String> array = be.getNumbers();
+			if(array.size() == 1)
+			{
+				System.out.print(be.getName() + " has only one phone number. Do you want to update it (y/n)? ");
+				String answer = s.nextLine();
+				answer = answer.trim();
+				answer = answer.toLowerCase();
+				
+				if(answer.equals("y"))
+				{
+					System.out.print("Enter new phone number: ");
+					book.editEntry(name, s.nextLine(), 0);
+				}
+				
+				break;
+			}
+			
+			System.out.println("Select which number to delete: ");
+			
+			for(int i = 0; i < array.size(); i++)
+				System.out.println(i + 1 + ": " + array.get(i));
+			
+			book.editEntry(name, null, s.nextInt() - 1);
+			s.nextLine();
+			break;
+
+		default:
+			break;
+		}
 	}
 	
 	public static void removeEntry(Book book, Scanner s) throws EntryNotFoundException
-	{
-		s.nextLine();
-		
-		System.out.print("Enter first name of a person to delete: ");
-		String firstName = s.nextLine();
-		
-		System.out.print("Enter last name of a person to delete: ");
-		String lastName = s.nextLine();
-		
-		Name name = new Name(firstName, lastName);
+	{	
+		Name name = formName(book, s);
 		
 		System.out.println(book.getEntry(name));
-		System.out.println("Do you want to remove this entry? (y/n)");
+		System.out.print("Do you want to remove this entry (y/n)? ");
 			
 		String answer = s.nextLine();
 		answer = answer.trim();
@@ -130,5 +160,18 @@ public class Main
 			
 		if(answer.equals("y"))
 			book.removeEntry(name);
+	}
+	
+	public static Name formName(Book book, Scanner s)
+	{
+		System.out.print("Enter first name: ");
+		String firstName = s.nextLine();
+		
+		System.out.print("Enter last name: ");
+		String lastName = s.nextLine();
+		
+		Name name = new Name(firstName, lastName);
+		
+		return name;
 	}
 }

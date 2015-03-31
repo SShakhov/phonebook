@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 public class Book
@@ -43,7 +41,7 @@ public class Book
 		array.add(new BookEntry(name, number));
 	}
 	
-	public void editEntry(Name name, String newNumber) throws EntryNotFoundException
+	public void editEntry(Name name, String newNumber, int deleteNumber) throws EntryNotFoundException
 	{
 		isEntry(name);
 		ArrayList<BookEntry> array = list.get(getHash(name.getLastName()));
@@ -51,7 +49,8 @@ public class Book
 		for(BookEntry be : array)
 			if(be.getName().equals(name))
 			{
-				be.setNumber(newNumber);
+				be.addNumber(newNumber);
+				be.removeNumber(deleteNumber);
 				return;
 			}
 		
