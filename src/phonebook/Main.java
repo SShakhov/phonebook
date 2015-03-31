@@ -14,8 +14,12 @@ public class Main
 		test.editEntry("John Doe", "+7915654321");
 		System.out.println(test.getEntry("John Doe"));
 		
+		System.out.println("\n" + test);
+		
 		test.removeEntry("John Doe");
 		
 		System.out.println(test.getEntry("John Doe"));
+		
+		System.out.println("\n" + test);
 	}
 }

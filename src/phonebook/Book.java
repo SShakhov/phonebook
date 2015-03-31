@@ -2,6 +2,8 @@ package phonebook;
 
 //import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Book
 {
@@ -45,7 +47,8 @@ public class Book
 		if(!isEntry(name))
 			return;
 		
-		list.put(getHash(name), null);
+		//list.put(getHash(name), null);
+		list.remove(getHash(name));
 	}
 	
 	public BookEntry getEntry(String name)
@@ -54,5 +57,20 @@ public class Book
 			return null;
 		
 		return list.get(getHash(name));
+	}
+	
+	@Override
+	public String toString()
+	{
+		String str = "";
+		Iterator<Map.Entry<Integer, BookEntry>> iter = list.entrySet().iterator();
+
+		while(iter.hasNext())
+		{
+			str += iter.next().getValue().toString();
+			str += "\n";
+		}
+		
+		return str.trim();
 	}
 }
