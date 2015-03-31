@@ -1,61 +1,104 @@
 package phonebook;
 
-//import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class Book
 {
-	private HashMap<Integer, BookEntry> list = 
-			new HashMap<Integer, BookEntry>();
+	private HashMap<Integer, ArrayList<BookEntry>> list = 
+			new HashMap<Integer, ArrayList<BookEntry>>();
 	private Integer maxEntries = 42;
 	
 	private Integer getHash(String s)
 	{
-		return s.hashCode() % maxEntries;
+		return s.toLowerCase().hashCode() % maxEntries;
 	}
 	
-	private void isEntry(String name) throws EntryNotFoundException
+	private void isEntry(Name name) throws EntryNotFoundException
 	{
-		if(list.get(getHash(BookEntry.processName(name))) == null)
+		if(list.get(getHash(name.getLastName())) == null)
 			throw new EntryNotFoundException(name + " not found");
 	}
 	
-	public void newEntry(String name, String number)
+	public void newEntry(Name name, String number) throws EntryAlreadyExistsException
 	{
-		//Add return true on success
-		list.put(getHash(BookEntry.processName(name)), new BookEntry(name, number));
+		Integer hash = getHash(name.getLastName());
+
+		if(list.get(hash) == null)
+			//No such entry in HashMap yet
+			list.put(hash, new ArrayList<BookEntry>());
+		
+		ArrayList<BookEntry> array = list.get(hash);
+		
+		for(BookEntry be : array)
+			if(be.getName().equals(name))
+				throw new EntryAlreadyExistsException(be.getName() + " already exists");
+		
+		array.add(new BookEntry(name, number));
 	}
 	
-	public void editEntry(String name, String newNumber) throws EntryNotFoundException
+	public void editEntry(Name name, String newNumber) throws EntryNotFoundException
 	{
-			isEntry(BookEntry.processName(name));
-			newEntry(BookEntry.processName(name), newNumber);
+		isEntry(name);
+		ArrayList<BookEntry> array = list.get(getHash(name.getLastName()));
+		
+		for(BookEntry be : array)
+			if(be.getName().equals(name))
+			{
+				be.setNumber(newNumber);
+				return;
+			}
+		
+		throw new EntryNotFoundException(name + " not found");
 	}
 	
-	public void removeEntry(String name) throws EntryNotFoundException
+	public void removeEntry(Name name) throws EntryNotFoundException
 	{
-			isEntry(BookEntry.processName(name));
-			list.remove(getHash(BookEntry.processName(name)));
+			isEntry(name);
+			ArrayList<BookEntry> array = list.get(getHash(name.getLastName()));
+			
+			for(int i = 0; i < array.size(); i++)
+				if(array.get(i).getName().equals(name))
+				{
+					array.remove(i);
+					
+					if(array.size() == 0)
+						//Removed the last person, removing entry
+						list.remove(getHash(name.getLastName()));
+					
+					return;
+				}
+			throw new EntryNotFoundException(name + " not found");
 	}
 	
-	public BookEntry getEntry(String name) throws EntryNotFoundException
+	public BookEntry getEntry(Name name) throws EntryNotFoundException
 	{
-			isEntry(BookEntry.processName(name));
-			return list.get(getHash(BookEntry.processName(name)));
+			isEntry(name);
+			ArrayList<BookEntry> array = list.get(getHash(name.getLastName()));
+			
+			for(BookEntry be : array)
+				if(be.getName().equals(name))
+					return be;
+			
+			throw new EntryNotFoundException(name + " not found");
 	}
 	
 	@Override
 	public String toString()
 	{
 		String str = "";
-		Iterator<Map.Entry<Integer, BookEntry>> iter = list.entrySet().iterator();
+		Iterator<Map.Entry<Integer, ArrayList<BookEntry>>> mapIter = list.entrySet().iterator();
 
-		while(iter.hasNext())
+		while(mapIter.hasNext())
 		{
-			str += iter.next().getValue().toString();
-			str += "\n";
+			Iterator <BookEntry> listIter = mapIter.next().getValue().iterator();
+			while(listIter.hasNext())
+			{
+				str += listIter.next().toString();
+				str += "\n";
+			}
 		}
 		
 		return str.trim();

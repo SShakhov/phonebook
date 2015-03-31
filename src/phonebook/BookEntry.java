@@ -2,45 +2,13 @@ package phonebook;
 
 public class BookEntry
 {
-	private String name;
 	private String number;
+	private Name name;
 	
-	public static String processName(String name)
-	{	
-		if(name.isEmpty())
-			throw new IllegalArgumentException("Name cannot be empty");
-
-		name = name.trim();
-		char[] buff = name.toCharArray();
-		
-		String str = "";
-		for(int i = 0; i < buff.length; i++)
-		{
-			if(Character.isWhitespace(buff[i]))
-			{
-				if(Character.isWhitespace(buff[i-1]))
-					continue;
-				str += " ";
-				continue;
-			}
-			else if(!Character.isAlphabetic(buff[i]))
-				throw new IllegalArgumentException("Name contains invalid characters");
-			
-			str += buff[i];
-		}
-		
-		return str;
-	}
-	
-	public BookEntry(String name, String number)
+	public BookEntry(Name name, String number)
 	{
-		setName(name);
+		this.name = name;
 		setNumber(number);
-	}
-	
-	public void setName(String name)
-	{
-		this.name = processName(name);
 	}
 	
 	public void setNumber(String number)
@@ -52,7 +20,7 @@ public class BookEntry
 		this.number = number;
 	}
 	
-	public String getName()
+	public Name getName()
 	{
 		return name;
 	}

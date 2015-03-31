@@ -1,5 +1,6 @@
 package phonebook;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main
@@ -12,6 +13,8 @@ public class Main
 		
 		while(true)
 		{
+			System.out.println();
+			
 			System.out.println("1: Create new entry");
 			System.out.println("2: Update existing entry");
 			System.out.println("3: Remove entry");
@@ -51,21 +54,35 @@ public class Main
 			}
 			catch(EntryNotFoundException e)
 			{
-				System.out.println(e.getMessage());
+				System.out.println("\n" + e.getMessage());
+			}
+			catch(EntryAlreadyExistsException e)
+			{
+				System.out.println("\n" + e.getMessage());
 			}
 			catch(IllegalArgumentException e)
 			{
-				System.out.println(e.getMessage());
+				System.out.println("\n" + e.getMessage());
+			}
+			catch(InputMismatchException e)
+			{
+				System.out.println("Please choose one of the listed options");
+				s.nextLine();
 			}
 		}
 	}
 	
-	public static void createNewEntry(Book book, Scanner s)
+	public static void createNewEntry(Book book, Scanner s) throws EntryAlreadyExistsException
 	{
 		s.nextLine();
 		
-		System.out.print("Enter a name: ");
-		String name = s.nextLine();
+		System.out.print("Enter first name: ");
+		String firstName = s.nextLine();
+		
+		System.out.print("Enter last name: ");
+		String lastName = s.nextLine();
+		
+		Name name = new Name(firstName, lastName);
 		
 		System.out.print("Enter a phone number: ");
 		String number = s.nextLine();
@@ -77,8 +94,13 @@ public class Main
 	{
 		s.nextLine();
 		
-		System.out.print("Enter a name for update: ");
-		String name = s.nextLine();
+		System.out.print("Enter first name of a person to update: ");
+		String firstName = s.nextLine();
+		
+		System.out.print("Enter last name of a person to update: ");
+		String lastName = s.nextLine();
+		
+		Name name = new Name(firstName, lastName);
 		
 		System.out.println(book.getEntry(name));
 		System.out.print("Enter new phone number: ");
@@ -91,8 +113,13 @@ public class Main
 	{
 		s.nextLine();
 		
-		System.out.print("Enter a name for deletion: ");
-		String name = s.nextLine();
+		System.out.print("Enter first name of a person to delete: ");
+		String firstName = s.nextLine();
+		
+		System.out.print("Enter last name of a person to delete: ");
+		String lastName = s.nextLine();
+		
+		Name name = new Name(firstName, lastName);
 		
 		System.out.println(book.getEntry(name));
 		System.out.println("Do you want to remove this entry? (y/n)");
