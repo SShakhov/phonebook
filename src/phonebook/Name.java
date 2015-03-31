@@ -1,7 +1,11 @@
 package phonebook;
 
-public class Name
+import java.io.Serializable;
+
+public class Name implements Serializable
 {
+	private static final long serialVersionUID = -7942702521289918791L;
+
 	private String firstName;
 	private String lastName;
 	

@@ -1,10 +1,13 @@
 package phonebook;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class BookEntry
+public class BookEntry implements Serializable
 {
+	private static final long serialVersionUID = 7313054273491711735L;
+	
 	private ArrayList<String> numbers = new ArrayList<String>();
 	private Name name;
 	

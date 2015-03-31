@@ -1,5 +1,6 @@
 package phonebook;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,8 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-public class Book
+public class Book implements Serializable
 {
+	private static final long serialVersionUID = -4336066641849188538L;	
+	
 	private HashMap<Integer, ArrayList<BookEntry>> list = 
 			new HashMap<Integer, ArrayList<BookEntry>>();
 	private Integer maxEntries = 42;

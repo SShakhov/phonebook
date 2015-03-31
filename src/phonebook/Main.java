@@ -1,16 +1,87 @@
 package phonebook;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main
 {
-	public static Scanner s = new Scanner(System.in);
+	private static Scanner s = new Scanner(System.in);
+	private static String bookName;
 	
 	public static void main(String[] args)
 	{
-		Book book = new Book();
+		System.out.println("1: Create new phone book");
+		System.out.println("2: Load existing phone book");
+		System.out.println("3: Exit");
+		
+		int input = s.nextInt();
+		s.nextLine();
+		
+		Book book = null;
+		
+		switch (input)
+		{
+		case 1:
+			System.out.print("Enter book name: ");
+			bookName = s.nextLine();
+			
+			book = new Book();
+			break;
+			
+		case 2:
+			System.out.print("Enter book name: ");
+			bookName = s.nextLine();
+			FileInputStream fis = null;
+			ObjectInputStream ois = null;
+			
+			try
+			{
+				fis = new FileInputStream(bookName);
+				ois = new ObjectInputStream(fis);
+			
+				book = (Book)ois.readObject();
+				
+				fis.close();
+				ois.close();
+			}
+			catch(FileNotFoundException e)
+			{
+				System.out.println("\n" + e.getMessage());
+			}
+			catch(IOException e)
+			{
+				System.out.println("\n" + e.getMessage());
+			}
+			catch(ClassNotFoundException e)
+			{
+				System.out.println("\n" + e.getMessage());
+			}
+			finally
+			{
+				try
+				{
+					fis.close();
+					ois.close();
+				}
+				catch(IOException e)
+				{
+					System.out.println("\n" + e.getMessage());
+				}
+			}
+			break;
+
+		default:
+			return;
+		}
+		
+		
 		
 		while(true)
 		{
@@ -20,10 +91,11 @@ public class Main
 			System.out.println("2: Update existing entry");
 			System.out.println("3: Remove entry");
 			System.out.println("4: Find entry");
-			System.out.println("5: Print phonebook");
-			System.out.println("6: Exit");
+			System.out.println("5: Print phone book");
+			System.out.println("6: Save phone book");
+			System.out.println("7: Exit");
 			
-			int input = s.nextInt();
+			input = s.nextInt();
 			s.nextLine();
 			
 			try
@@ -51,6 +123,10 @@ public class Main
 					break;
 					
 				case 6:
+					savePhoneBook(book, s);
+					break;
+					
+				case 7:
 					s.close();
 					return;
 					
@@ -173,5 +249,39 @@ public class Main
 		Name name = new Name(firstName, lastName);
 		
 		return name;
+	}
+	
+	public static void savePhoneBook(Book book, Scanner s)
+	{
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		
+		try
+		{
+			fos = new FileOutputStream(bookName);
+			oos = new ObjectOutputStream(fos);
+			
+			oos.writeObject(book);
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("\n" + e.getMessage());
+		}
+		catch(IOException e)
+		{
+			System.out.println("\n" + e.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				fos.close();
+				oos.close();
+			}
+			catch(IOException e)
+			{
+				System.out.println("\n" + e.getMessage());
+			}
+		}
 	}
 }
