@@ -17,6 +17,7 @@ public class Book
 	public void newEntry(String name, String number)
 	{
 		
+		list.put(getHash(name), new Map.Entry<String, String>().);
 	}
 	
 	public void editEntry(String name, String newNumber)
