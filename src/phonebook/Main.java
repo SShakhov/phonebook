@@ -21,8 +21,6 @@ public class Main
 			test.removeEntry("John Doe");
 		
 			System.out.println(test.getEntry("John Doe"));
-		
-			System.out.println("lol" + test);
 		}
 		catch(EntryNotFoundException e)
 		{

@@ -18,32 +18,32 @@ public class Book
 	
 	private void isEntry(String name) throws EntryNotFoundException
 	{
-		if(list.get(getHash(name)) == null)
+		if(list.get(getHash(BookEntry.processName(name))) == null)
 			throw new EntryNotFoundException(name + " not found");
 	}
 	
 	public void newEntry(String name, String number)
 	{
 		//Add return true on success
-		list.put(getHash(name), new BookEntry(name, number));
+		list.put(getHash(BookEntry.processName(name)), new BookEntry(name, number));
 	}
 	
 	public void editEntry(String name, String newNumber) throws EntryNotFoundException
 	{
-			isEntry(name);
-			newEntry(name, newNumber);
+			isEntry(BookEntry.processName(name));
+			newEntry(BookEntry.processName(name), newNumber);
 	}
 	
 	public void removeEntry(String name) throws EntryNotFoundException
 	{
-			isEntry(name);
-			list.remove(getHash(name));
+			isEntry(BookEntry.processName(name));
+			list.remove(getHash(BookEntry.processName(name)));
 	}
 	
 	public BookEntry getEntry(String name) throws EntryNotFoundException
 	{
-			isEntry(name);
-			return list.get(getHash(name));
+			isEntry(BookEntry.processName(name));
+			return list.get(getHash(BookEntry.processName(name)));
 	}
 	
 	@Override
