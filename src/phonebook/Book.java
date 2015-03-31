@@ -16,16 +16,10 @@ public class Book
 		return s.hashCode() % maxEntries;
 	}
 	
-	private boolean isEntry(String name)
+	private void isEntry(String name) throws EntryNotFoundException
 	{
 		if(list.get(getHash(name)) == null)
-		{
-			System.out.println("Error: " + name + " not found");
-			
-			return false;
-		}
-		
-		return true;
+			throw new EntryNotFoundException(name + " not found");
 	}
 	
 	public void newEntry(String name, String number)
@@ -34,29 +28,22 @@ public class Book
 		list.put(getHash(name), new BookEntry(name, number));
 	}
 	
-	public void editEntry(String name, String newNumber)
+	public void editEntry(String name, String newNumber) throws EntryNotFoundException
 	{
-		if(!isEntry(name))
-			return;
-		
-		newEntry(name, newNumber);
+			isEntry(name);
+			newEntry(name, newNumber);
 	}
 	
-	public void removeEntry(String name)
+	public void removeEntry(String name) throws EntryNotFoundException
 	{
-		if(!isEntry(name))
-			return;
-		
-		//list.put(getHash(name), null);
-		list.remove(getHash(name));
+			isEntry(name);
+			list.remove(getHash(name));
 	}
 	
-	public BookEntry getEntry(String name)
+	public BookEntry getEntry(String name) throws EntryNotFoundException
 	{
-		if(!isEntry(name))
-			return null;
-		
-		return list.get(getHash(name));
+			isEntry(name);
+			return list.get(getHash(name));
 	}
 	
 	@Override

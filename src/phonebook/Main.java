@@ -9,17 +9,24 @@ public class Main
 		test.newEntry("John Doe", "+7915123456");
 		test.newEntry("Eugene Safronov", "+7lololol");
 		
-		System.out.println(test.getEntry("John Doe"));
+		try
+		{
+			System.out.println(test.getEntry("John Doe"));
 		
-		test.editEntry("John Doe", "+7915654321");
-		System.out.println(test.getEntry("John Doe"));
+			test.editEntry("John Doe", "+7915654321");
+			System.out.println(test.getEntry("John Doe"));
 		
-		System.out.println("\n" + test);
+			System.out.println("\n" + test + "\n");
 		
-		test.removeEntry("John Doe");
+			test.removeEntry("John Doe");
 		
-		System.out.println(test.getEntry("John Doe"));
+			System.out.println(test.getEntry("John Doe"));
 		
-		System.out.println("\n" + test);
+			System.out.println("lol" + test);
+		}
+		catch(EntryNotFoundException e)
+		{
+			System.out.println(e);
+		}
 	}
 }
